@@ -5,31 +5,41 @@ using BookApp.Services.Books;
 
 namespace BookApp.Controllers;
 
-public class HomeController : Controller
+using Microsoft.Extensions.Logging.Abstractions;
+
+public class HomeController(ListBooksService listBooksService, ILogger<HomeController> logger)
+    : Controller
 {
-    private readonly ListBooksService listBooksService;
-    private readonly ILogger<HomeController> logger;
+    private readonly ListBooksService listBooksService = listBooksService ?? throw new ArgumentNullException(nameof(listBooksService));
+    private readonly ILogger<HomeController> logger = logger ?? NullLogger<HomeController>.Instance;
 
-    public HomeController( ListBooksService listBooksService, ILogger<HomeController> logger)
+    public async Task<IActionResult> Index(SortFilterPageOptions options)
     {
-        this.listBooksService = listBooksService ?? throw new ArgumentNullException(nameof(listBooksService));
-        this.logger = logger;
+        this.logger.LogTrace("Handle {ControllerName} {ActionName} action", nameof(HomeController), nameof(this.Index));
+        var books = await listBooksService.GetBooksListAsync(options);
+        return this.View(new BookListItemViewData
+        {
+            SortFilterPageOptions = options,
+            BooksList = books
+        });
     }
 
-    public async Task<IActionResult> Index()
+    public async Task<JsonResult> GetFilterSearchContent(SortFilterPageOptions options)
     {
-        var books = await listBooksService.GetBooksListAsync();
-        return View();
+        this.logger.LogTrace("Handle {ControllerName} {ActionName} action", nameof(HomeController), nameof(this.GetFilterSearchContent));
+        return this.Json(await listBooksService.GetFilterDropDownValues(options));
     }
-
+    
     public IActionResult Privacy()
     {
+        this.logger.LogTrace("Handle {ControllerName} {ActionName} action", nameof(HomeController), nameof(this.Privacy));
         return View();
     }
 
     [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
     public IActionResult Error()
     {
+        this.logger.LogTrace("Handle {ControllerName} {ActionName} action", nameof(HomeController), nameof(this.Privacy));
         return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
     }
 }

@@ -1,8 +1,105 @@
-﻿@{
+﻿@using BookApp.Extensions
+@using Microsoft.EntityFrameworkCore.Metadata.Conventions
+@model BookApp.Services.Books.BookListItemViewData
+
+@{
     ViewData["Title"] = "Home Page";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
-</div>
+<form id="sort-filter-form" role="form">
+    <div class="row">
+        <div class="col-sm-3">
+            <label>Sort By</label>
+            <select asp-for="SortFilterPageOptions.OrderByOptions" name="OrderByOptions"
+                    asp-items="Html.GetEnumSelectList<BookApp.Services.Books.BooksSortByOptions>()"
+                    class="form-control sort-filter-width"
+                    onchange="BookList.sendForm(this)"></select>
+        </div>
+
+        <div class="col-sm-3">
+            <label>Filter Type</label>
+            <select asp-for="SortFilterPageOptions.FilterBy" name="FilterBy"
+                    asp-items="Html.GetEnumSelectList<BookApp.Services.Books.BooksFilterByOptions>()"
+                    class="form-control sort-filter-width"
+                    onchange="BookList.filterByHasChanged(this)"></select>
+        </div>
+        
+        <div class="col-sm-3 dim-filter-value" id="filter-value-group">
+            <label>Filter By</label>
+            <select asp-for="SortFilterPageOptions.FilterValue" name="FilterValue"
+                    id="filter-value-dropdown"
+                    class="form-control sort-filter-width"
+                    disabled
+                    onchange="BookList.sendForm(this)">
+                <option>Select filter type...</option>
+            </select>
+        </div>
+        
+        <div class="col-sm-2">
+            <label>Page</label>
+            <div>
+                <input asp-for="SortFilterPageOptions.PageNum" name="PageNum"
+                       class="form-control page-control-width page-num-input"
+                       onchange="BookList.sendForm(this)">
+                <span class="num-pages-text">of @Model.SortFilterPageOptions.NumPages</span>
+            </div>
+        </div>
+
+        <div class="col-sm-1">
+            <label>Page&nbsp;Size</label>
+            <select asp-for="SortFilterPageOptions.PageSize" name="PageSize"
+                    asp-items="Model.SortFilterPageOptions.PageSizes.Select(x => new SelectListItem {Text = x.ToString(), Value = x.ToString()})"
+                    class="form-control page-control-width"
+                    onchange="BookList.sendForm(this)"></select>
+        </div>
+    </div>
+
+    <input id="PrevCheckState" name="PrevCheckState" type="hidden" value=@Model.SortFilterPageOptions.PrevCheckState>
+</form>
+<br />
+
+<table class="table">
+    @foreach (var item in Model.BooksList)
+    {
+        <tr>
+            <td>
+                <h3>@Html.DisplayFor(modelItem => item.Title)</h3>
+                <div>
+                    <small>by</small>&nbsp;@Html.DisplayFor(m => item.AuthorsOrdered)
+                </div>
+                <div>
+                    Published on @item.PublishedOn.ToString("d")
+                </div>
+                <div>
+                    Categories: <i>@string.Join(", ", item.TagStrings)</i> 
+                </div>
+                <div>
+                    @(item.ReviewsCount == 0 ? "Be the first to review this book" : $"Votes: {item.ReviewsAverageVotes:F1} by {item.ReviewsCount} customers")
+                </div>
+                <div>
+                    <span class="h4">@(item.ActualPrice < 0 ? "- not for sale - " : $"Price: ${item.ActualPrice:F}")</span>
+                    @if (item.PromotionPromotionalText != null)
+                    {
+                        <span class="text-danger">
+                            <strong >&nbsp;<del>$@($"{item.Price:F}")</del>&nbsp;<i>@(item.PromotionPromotionalText)</i></strong>
+                        </span>
+                    }                    
+                </div>
+            </td>
+            <td class="vert-align">
+           
+            </td>
+        </tr>
+    }
+</table>
+
+@section Scripts{
+
+    <script type='text/javascript'>
+        document.addEventListener("DOMContentLoaded",
+            function(event) {
+                BookList.initialise('@Model.SortFilterPageOptions.FilterBy', '@Model.SortFilterPageOptions.FilterValue',
+                    '@Url.Action("GetFilterSearchContent")');
+            });
+    </script>
+}

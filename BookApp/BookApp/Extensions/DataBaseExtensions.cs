@@ -18,9 +18,10 @@ public static class DataBaseExtensions
                 await context.Database.MigrateAsync();
                 if (arePendingMigrations)
                 {
-                    await context.SeedDatabaseIfNoBooksAsync(env.WebRootPath);
+                    await context.SeedDatabaseIfNoBooksAsync(env.WebRootPath);  
                 }
             }
+            
             catch (Exception ex)
             {
                 var logger = services.GetRequiredService<ILogger<Program>>();
