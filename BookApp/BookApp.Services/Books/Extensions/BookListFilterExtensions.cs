@@ -2,6 +2,8 @@
 
 using System.Reflection;
 using BookApp.Persistence;
+using BookApp.Services.Api.Books;
+using BookApp.Services.Api.Books.Contracts;
 using BookApp.Services.Books.Filtering;
 using BookApp.Services.Books.Sorting;
 

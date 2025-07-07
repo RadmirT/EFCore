@@ -5,6 +5,8 @@ using BookApp.Services.Books;
 
 namespace BookApp.Controllers;
 
+using BookApp.Services.Api.Books;
+using BookApp.Services.Api.Books.Contracts;
 using Microsoft.Extensions.Logging.Abstractions;
 
 public class HomeController(ListBooksService listBooksService, ILogger<HomeController> logger)
@@ -17,7 +19,7 @@ public class HomeController(ListBooksService listBooksService, ILogger<HomeContr
     {
         this.logger.LogTrace("Handle {ControllerName} {ActionName} action", nameof(HomeController), nameof(this.Index));
         var books = await listBooksService.GetBooksListAsync(options);
-        return this.View(new BookListItemViewData
+        return this.View(new BookListItemPageData
         {
             SortFilterPageOptions = options,
             BooksList = books

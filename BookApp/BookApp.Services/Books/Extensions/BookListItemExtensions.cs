@@ -2,6 +2,9 @@ using BookApp.Entities;
 
 namespace BookApp.Services.Books;
 
+using BookApp.Services.Api.Books;
+using BookApp.Services.Api.Books.Contracts;
+
 public static class BookListItemExtensions
 {
     public static IQueryable<BookListItem> MapToBookList(this IQueryable<Book> books) =>

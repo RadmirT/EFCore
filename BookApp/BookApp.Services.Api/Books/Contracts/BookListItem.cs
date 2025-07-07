@@ -1,4 +1,4 @@
-namespace BookApp.Services.Books;
+namespace BookApp.Services.Api.Books.Contracts;
 
 /// <summary>
 /// Содержит данные о книге отображаемых в списке книг.

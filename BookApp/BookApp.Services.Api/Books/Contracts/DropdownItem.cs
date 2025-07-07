@@ -1,4 +1,4 @@
-namespace BookApp.Services.Books;
+namespace BookApp.Services.Api.Books.Contracts;
 
 public record DropdownItem(string Value, string Title)
 {

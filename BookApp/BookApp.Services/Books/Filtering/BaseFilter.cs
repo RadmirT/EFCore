@@ -1,6 +1,8 @@
 namespace BookApp.Services.Books.Filtering;
 
 using BookApp.Persistence;
+using BookApp.Services.Api.Books;
+using BookApp.Services.Api.Books.Contracts;
 
 internal abstract class BaseFilter(BooksFilterByOptions options)
 {

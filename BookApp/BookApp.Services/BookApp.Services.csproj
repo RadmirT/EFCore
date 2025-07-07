@@ -9,6 +9,7 @@
     <ItemGroup>
       <ProjectReference Include="..\BookApp.Enitites\BookApp.Entities.csproj" />
       <ProjectReference Include="..\BookApp.Persistence\BookApp.Persistence.csproj" />
+      <ProjectReference Include="..\BookApp.Services.Api\BookApp.Services.Api.csproj" />
     </ItemGroup>
 
 </Project>

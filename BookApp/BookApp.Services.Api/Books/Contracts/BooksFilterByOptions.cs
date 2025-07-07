@@ -1,6 +1,7 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿namespace BookApp.Services.Api.Books.Contracts;
 
-namespace BookApp.Services.Books;
+using System.ComponentModel.DataAnnotations;
+
 public enum BooksFilterByOptions
 {
     [Display(Name = "All")]

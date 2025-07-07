@@ -1,6 +1,8 @@
 ﻿namespace BookApp.Services.Books.Extensions;
 
 using System.Reflection;
+using BookApp.Services.Api.Books;
+using BookApp.Services.Api.Books.Contracts;
 using BookApp.Services.Books.Sorting;
 
 public static class BookListSortExtensions

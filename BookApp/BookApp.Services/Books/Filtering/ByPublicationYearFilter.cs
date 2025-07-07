@@ -1,6 +1,8 @@
 namespace BookApp.Services.Books.Filtering;
 
 using BookApp.Persistence;
+using BookApp.Services.Api.Books;
+using BookApp.Services.Api.Books.Contracts;
 using Microsoft.EntityFrameworkCore;
 
 internal class ByPublicationYearFilter() : BaseFilter(BooksFilterByOptions.ByPublicationYear)

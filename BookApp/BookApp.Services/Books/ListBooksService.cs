@@ -3,6 +3,8 @@ using Microsoft.EntityFrameworkCore;
 
 namespace BookApp.Services.Books;
 
+using BookApp.Services.Api.Books;
+using BookApp.Services.Api.Books.Contracts;
 using BookApp.Services.Books.Extensions;
 using BookApp.Services.Extensions;
 
@@ -10,7 +12,7 @@ using BookApp.Services.Extensions;
 /// Сервис для получения списка книг
 /// </summary>
 /// <param name="context">Контекст доступа к БД.</param>
-public class ListBooksService(AppDbContext context)
+public class ListBooksService(AppDbContext context) : IListBooksService
 {
     private readonly AppDbContext context = context ?? throw new ArgumentNullException(nameof(context));
 

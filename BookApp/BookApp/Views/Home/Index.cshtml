@@ -1,6 +1,7 @@
 ﻿@using BookApp.Extensions
+@using BookApp.Services.Api.Books.Contracts
 @using Microsoft.EntityFrameworkCore.Metadata.Conventions
-@model BookApp.Services.Books.BookListItemViewData
+@model BookApp.Services.Api.Books.Contracts.BookListItemPageData
 
 @{
     ViewData["Title"] = "Home Page";
@@ -11,7 +12,7 @@
         <div class="col-sm-3">
             <label>Sort By</label>
             <select asp-for="SortFilterPageOptions.OrderByOptions" name="OrderByOptions"
-                    asp-items="Html.GetEnumSelectList<BookApp.Services.Books.BooksSortByOptions>()"
+                    asp-items="Html.GetEnumSelectList<BooksSortByOptions>()"
                     class="form-control sort-filter-width"
                     onchange="BookList.sendForm(this)"></select>
         </div>
@@ -19,7 +20,7 @@
         <div class="col-sm-3">
             <label>Filter Type</label>
             <select asp-for="SortFilterPageOptions.FilterBy" name="FilterBy"
-                    asp-items="Html.GetEnumSelectList<BookApp.Services.Books.BooksFilterByOptions>()"
+                    asp-items="Html.GetEnumSelectList<BooksFilterByOptions>()"
                     class="form-control sort-filter-width"
                     onchange="BookList.filterByHasChanged(this)"></select>
         </div>
