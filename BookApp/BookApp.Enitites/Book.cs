@@ -47,7 +47,7 @@ public class Book
     /// <summary>
     /// Отзывы на книги
     /// </summary>
-    public ICollection<Review> Reviews { get; private set; } = new List<Review>();
+    public ICollection<Review> Reviews { get; set; } = new List<Review>();
 
     /// <summary>
     /// Категории (теги)

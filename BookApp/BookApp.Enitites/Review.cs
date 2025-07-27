@@ -2,6 +2,26 @@
 public class Review
 {
     /// <summary>
+    /// Конструктор по умолчанию
+    /// </summary>
+    public Review()
+    {
+        
+    }
+
+    /// <summary>
+    /// Инициализирует новый экземпляр класса <see cref="Review"/>  с привязкой к книге.
+    /// </summary>
+    /// <param name="bookId">Идентификатор книги</param>
+    /// <remarks>
+    /// Используется для отключенных сценариев работы.
+    /// </remarks>
+    public Review(int bookId)
+    {
+        BookId = bookId;
+    }
+    
+    /// <summary>
     /// Идентификатор отзыва
     /// </summary>
     public int ReviewId { get; private set; }
@@ -9,7 +29,7 @@ public class Review
     /// <summary>
     /// Имя автора отзыва
     /// </summary>
-    public required string VoterName { get; set; }
+    public string VoterName { get; set; }
     
     /// <summary>
     /// Оценка книги
