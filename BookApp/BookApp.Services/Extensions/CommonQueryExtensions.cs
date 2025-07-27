@@ -1,5 +1,8 @@
 namespace BookApp.Services.Extensions;
 
+using System;
+using System.Linq;
+
 internal static class CommonQueryExtensions
 {
     public static IQueryable<T> Page<T>(this IQueryable<T> query, int page, int pageSize)

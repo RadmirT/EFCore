@@ -1,8 +1,7 @@
+namespace BookApp.Services.Books.Extensions;
+
+using System.Linq;
 using BookApp.Entities;
-
-namespace BookApp.Services.Books;
-
-using BookApp.Services.Api.Books;
 using BookApp.Services.Api.Books.Contracts;
 
 public static class BookListItemExtensions

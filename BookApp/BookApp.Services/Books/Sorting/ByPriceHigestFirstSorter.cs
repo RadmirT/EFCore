@@ -1,5 +1,6 @@
 ﻿namespace BookApp.Services.Books.Sorting;
 
+using System.Linq;
 using BookApp.Services.Api.Books;
 using BookApp.Services.Api.Books.Contracts;
 

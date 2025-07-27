@@ -1,5 +1,9 @@
 namespace BookApp.Services.Books;
 
+using System;
+using System.Threading;
+using System.Threading.Tasks;
+using BookApp.Common;
 using BookApp.Entities;
 using BookApp.Persistence;
 using BookApp.Services.Api.Books;
@@ -11,23 +15,34 @@ public class ChangePriceOfferService(AppDbContext context) : IChangePriceOfferSe
 {
     private readonly AppDbContext context  =  context ?? throw new NullReferenceException(nameof(context));
 
-    public async Task<PriceOfferDto> GetOriginalAsync(int id, CancellationToken cancellationToken)
+    public async Task<GetPriceOfferResponse> GetOriginalAsync(int id, CancellationToken cancellationToken)
     {
         var book = await context.Books
             .AsNoTracking()
             .Include(r => r.Promotion)
             .SingleAsync(k => k.BookId == id, cancellationToken: cancellationToken);
 
-        return (book.Promotion?.ToPriceOfferDto())
-               ?? new PriceOfferDto(id, book.Price);
+        return new GetPriceOfferResponse()
+        {
+            Book = book,
+            PriceOffer = book.Promotion?.ToPriceOfferDto() ?? new PriceOfferDto(id, book.Price, IsNew: true)
+        };
     }
 
-    public async Task AddUpdatePriceOffer(PriceOfferDto promotion, CancellationToken cancellationToken)
+    public async Task<Result<Error>> AddOrUpdatePriceOffer(PriceOfferDto promotion, CancellationToken cancellationToken)
     {
+        if (string.IsNullOrEmpty(promotion.PromotionalText))
+        {
+            return Result<Error>.Fail(new Error("PromotionalText is required"));
+        }
+        
         var book = await context.Books
             .Include(r => r.Promotion)
-            .SingleAsync(k => k.BookId == promotion.BookId, cancellationToken: cancellationToken);
-       
+            .SingleOrDefaultAsync(k => k.BookId == promotion.BookId, cancellationToken: cancellationToken);
+        if (book == null)
+        {
+            return Result<Error>.Fail(new Error("Book not found"));
+        }
         if (book.Promotion == null)
         {
             book.Promotion = new PriceOffer
@@ -42,5 +57,20 @@ public class ChangePriceOfferService(AppDbContext context) : IChangePriceOfferSe
             book.Promotion.PromotionalText = promotion.PromotionalText;
         }
         await context.SaveChangesAsync(cancellationToken);
+        return Result<Error>.Success();
+    }
+
+    public async Task<Result<Error>> RemovePriceOffer(int bookId, CancellationToken cancellationToken)
+    {
+        var book = await context.Books
+            .Include(r => r.Promotion)
+            .SingleOrDefaultAsync(k => k.BookId == bookId, cancellationToken: cancellationToken);
+        if (book == null)
+        {
+            return Result<Error>.Fail(new Error("Book not found"));
+        }
+        book.Promotion = null;
+        await context.SaveChangesAsync(cancellationToken);
+        return Result<Error>.Success();
     }
 }

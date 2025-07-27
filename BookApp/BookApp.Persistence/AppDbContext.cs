@@ -31,6 +31,11 @@ public class AppDbContext: DbContext
     /// Акционные цены
     /// </summary>
     public DbSet<PriceOffer> PriceOffers { get; init; }
+    
+    /// <summary>
+    /// Заказы
+    /// </summary>
+    public DbSet<Order> Orders { get; init; }
 
     override protected void OnModelCreating(ModelBuilder modelBuilder)
     {

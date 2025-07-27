@@ -1,5 +1,7 @@
 namespace BookApp.Services.DatabaseServices;
 
+using System.Collections.Generic;
+
 public class BookInfoJson
 {
     public string title { get; set; }

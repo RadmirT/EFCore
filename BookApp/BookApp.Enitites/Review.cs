@@ -44,5 +44,5 @@ public class Review
     /// <summary>
     /// Идентификатор книги, к которой относится отзыв
     /// </summary>
-    public int BookId { get; private set; }
+    public int BookId { get; set; }
 }

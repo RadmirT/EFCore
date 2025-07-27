@@ -2,14 +2,19 @@
 
     <PropertyGroup>
         <TargetFramework>net9.0</TargetFramework>
-        <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
+        <ImplicitUsings>enable</ImplicitUsings>
     </PropertyGroup>
 
     <ItemGroup>
+      <ProjectReference Include="..\BookApp.Common\BookApp.Common.csproj" />
       <ProjectReference Include="..\BookApp.Enitites\BookApp.Entities.csproj" />
+      <ProjectReference Include="..\BookApp.Features\BookApp.Features.csproj" />
       <ProjectReference Include="..\BookApp.Persistence\BookApp.Persistence.csproj" />
       <ProjectReference Include="..\BookApp.Services.Api\BookApp.Services.Api.csproj" />
     </ItemGroup>
-
+    
+    <ItemGroup>
+        <FrameworkReference Include="Microsoft.AspNetCore.App" />
+    </ItemGroup>
 </Project>

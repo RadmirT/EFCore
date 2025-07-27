@@ -4,25 +4,38 @@ using Microsoft.EntityFrameworkCore;
 
 namespace BookApp.Services.Books;
 
-public class ReviewService(AppDbContext context)
+using BookApp.Common;
+using BookApp.Services.Api.Books;
+using BookApp.Services.Api.Books.Contracts;
+
+public class ReviewService(AppDbContext context) :  IReviewService
 {
     private readonly AppDbContext _context = context ?? throw new ArgumentNullException(nameof(context));
 
-    public Review GetBlankReview(int id)
+    public GetBlankReviewResponse GetBlankReview(int id)
     {
-        if( _context.Books.Any(p => p.BookId == id) == false)
-                throw new ArgumentException("Book does not exist");
-        return new Review(id);
+        var book = _context.Books.AsNoTracking().SingleOrDefault(book => book.BookId == id);
+        if (book is null)
+        {
+            throw new ArgumentException("Book does not exist");
+        }
+
+        return new  GetBlankReviewResponse(book.Title, new Review(id));
     }
 
-    public Book AddReviewToBook(Review review)
+    public Result<Error> AddReviewToBook(Review review)
     {
         var book = _context.Books
             .Include(r => r.Reviews)
-            .Single(k => k.BookId == review.BookId);
-        
+            .SingleOrDefault(k => k.BookId == review.BookId);
+        if (book is null)
+        {
+            throw new ArgumentException("Book does not exist");
+        }
+
         book.Reviews.Add(review);
         _context.SaveChanges();
-        return book;
+        
+        return Result<Error>.Success();
     }
 }

@@ -90,6 +90,57 @@ namespace BookApp.Persistence.Migrations
                     b.ToTable("BookAuthor");
                 });
 
+            modelBuilder.Entity("BookApp.Entities.Order", b =>
+                {
+                    b.Property<int>("OrderId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("OrderId"));
+
+                    b.Property<Guid>("CustomerId")
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTime>("DateOrderedUtc")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.HasKey("OrderId");
+
+                    b.ToTable("Orders");
+                });
+
+            modelBuilder.Entity("BookApp.Entities.OrderLineItem", b =>
+                {
+                    b.Property<int>("OrderLineItemId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("OrderLineItemId"));
+
+                    b.Property<decimal>("BookPrice")
+                        .HasColumnType("numeric");
+
+                    b.Property<int>("ChosenBookBookId")
+                        .HasColumnType("integer");
+
+                    b.Property<byte>("LineNum")
+                        .HasColumnType("smallint");
+
+                    b.Property<int>("NumBooks")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("OrderId")
+                        .HasColumnType("integer");
+
+                    b.HasKey("OrderLineItemId");
+
+                    b.HasIndex("ChosenBookBookId");
+
+                    b.HasIndex("OrderId");
+
+                    b.ToTable("OrderLineItem");
+                });
+
             modelBuilder.Entity("BookApp.Entities.PriceOffer", b =>
                 {
                     b.Property<int>("PriceOfferId")
@@ -188,6 +239,23 @@ namespace BookApp.Persistence.Migrations
                     b.Navigation("Book");
                 });
 
+            modelBuilder.Entity("BookApp.Entities.OrderLineItem", b =>
+                {
+                    b.HasOne("BookApp.Entities.Book", "ChosenBook")
+                        .WithMany()
+                        .HasForeignKey("ChosenBookBookId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("BookApp.Entities.Order", null)
+                        .WithMany("LineItems")
+                        .HasForeignKey("OrderId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("ChosenBook");
+                });
+
             modelBuilder.Entity("BookApp.Entities.PriceOffer", b =>
                 {
                     b.HasOne("BookApp.Entities.Book", null)
@@ -233,6 +301,11 @@ namespace BookApp.Persistence.Migrations
                     b.Navigation("Promotion");
 
                     b.Navigation("Reviews");
+                });
+
+            modelBuilder.Entity("BookApp.Entities.Order", b =>
+                {
+                    b.Navigation("LineItems");
                 });
 #pragma warning restore 612, 618
         }

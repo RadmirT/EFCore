@@ -1,6 +1,5 @@
 ﻿@using BookApp.Extensions
 @using BookApp.Services.Api.Books.Contracts
-@using Microsoft.EntityFrameworkCore.Metadata.Conventions
 @model BookApp.Services.Api.Books.Contracts.BookListItemPageData
 
 @{
@@ -24,7 +23,7 @@
                     class="form-control sort-filter-width"
                     onchange="BookList.filterByHasChanged(this)"></select>
         </div>
-        
+
         <div class="col-sm-3 dim-filter-value" id="filter-value-group">
             <label>Filter By</label>
             <select asp-for="SortFilterPageOptions.FilterValue" name="FilterValue"
@@ -35,7 +34,7 @@
                 <option>Select filter type...</option>
             </select>
         </div>
-        
+
         <div class="col-sm-2">
             <label>Page</label>
             <div>
@@ -57,7 +56,7 @@
 
     <input id="PrevCheckState" name="PrevCheckState" type="hidden" value=@Model.SortFilterPageOptions.PrevCheckState>
 </form>
-<br />
+<br/>
 
 <table class="table">
     @foreach (var item in Model.BooksList)
@@ -72,33 +71,67 @@
                     Published on @item.PublishedOn.ToString("d")
                 </div>
                 <div>
-                    Categories: <i>@string.Join(", ", item.TagStrings)</i> 
+                    Categories: <i>@string.Join(", ", item.TagStrings)</i>
                 </div>
                 <div>
                     @(item.ReviewsCount == 0 ? "Be the first to review this book" : $"Votes: {item.ReviewsAverageVotes:F1} by {item.ReviewsCount} customers")
                 </div>
                 <div>
-                    <span class="h4">@(item.ActualPrice < 0 ? "- not for sale - " : $"Price: ${item.ActualPrice:F}")</span>
+                    <span
+                        class="h4">@(item.ActualPrice < 0 ? "- not for sale - " : $"Price: ${item.ActualPrice:F}")</span>
                     @if (item.PromotionPromotionalText != null)
                     {
                         <span class="text-danger">
-                            <strong >&nbsp;<del>$@($"{item.Price:F}")</del>&nbsp;<i>@(item.PromotionPromotionalText)</i></strong>
+                            <strong>&nbsp;<del>$@($"{item.Price:F}")</del>&nbsp;<i>@(item.PromotionPromotionalText)</i></strong>
                         </span>
-                    }                    
+                    }
                 </div>
             </td>
             <td class="vert-align">
-           
+                @if (Context.Request.IsLocal())
+                {
+                    <div class="dropdown">
+                        <button type="button" class="btn btn-light dropdown-toggle" id="dropdownMenu2"
+                                data-bs-toggle="dropdown">
+                            Admin
+                        </button>
+                        <div class="dropdown-menu">
+                            <a class="dropdown-item" asp-area="" asp-controller="Admin" asp-action="ChangePubDate"
+                               asp-route-id="@item.BookId">Change Pub Date</a>
+                            @if (item.PromotionPromotionalText == null)
+                            {
+                                <a class="dropdown-item" asp-controller="Admin" asp-action="ChangePromotion"
+                                   asp-route-id="@item.BookId">Add Promotion
+                                </a>
+                            }
+                            else
+                            {
+                                <a class="dropdown-item" asp-area="" asp-controller="Admin" asp-action="ChangePromotion"
+                                   asp-route-id="@item.BookId">
+                                    Remove Promotion</a>
+                            }
+                            <a class="dropdown-item" asp-area="" asp-controller="Admin" asp-action="AddBookReview"
+                               asp-route-id="@item.BookId">Add Review</a>
+                        </div>
+                    </div>
+                }
+            </td>
+            <td class="vert-align">
+                @if (item.ActualPrice >= 0)
+                {
+                    <a asp-area="" asp-controller="Checkout" asp-action="Buy" asp-route-BookId="@item.BookId">Buy
+                        book</a>
+                }
             </td>
         </tr>
     }
 </table>
 
-@section Scripts{
-
+@section Scripts
+{
     <script type='text/javascript'>
         document.addEventListener("DOMContentLoaded",
-            function(event) {
+            function (event) {
                 BookList.initialise('@Model.SortFilterPageOptions.FilterBy', '@Model.SortFilterPageOptions.FilterValue',
                     '@Url.Action("GetFilterSearchContent")');
             });

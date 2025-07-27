@@ -2,6 +2,8 @@ using BookApp.Entities;
 
 namespace BookApp.Services.DatabaseServices;
 
+using System;
+
 public static class SpecialBook
 {
     public static Book CreateSpecialBook()

@@ -1,6 +1,9 @@
 using BookApp.Extensions;
 using BookApp.Persistence;
+using BookApp.Services.Api.Books;
 using BookApp.Services.Books;
+using BookApp.Services.Checkout;
+using BookApp.Services.Order;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -10,8 +13,12 @@ builder.Services.AddControllersWithViews();
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 
 builder.Services.AddDbContext<AppDbContext>(options => options.UseNpgsql(connectionString));
-builder.Services.AddTransient<ListBooksService>();
-
+builder.Services.AddScoped<ListBooksService>();
+builder.Services.AddScoped<CheckoutService>();
+builder.Services.AddScoped<DisplayOrdersService>();
+builder.Services.AddScoped<IChangePubDateService, ChangePubDateService>();
+builder.Services.AddScoped<IChangePriceOfferService, ChangePriceOfferService>();
+builder.Services.AddScoped<IReviewService, ReviewService>();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

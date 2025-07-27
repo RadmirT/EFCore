@@ -1,5 +1,8 @@
 ﻿namespace BookApp.Services.Books.Extensions;
 
+using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
 using BookApp.Services.Api.Books;
 using BookApp.Services.Api.Books.Contracts;
