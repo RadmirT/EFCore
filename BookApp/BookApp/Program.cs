@@ -1,6 +1,7 @@
 using BookApp.Extensions;
 using BookApp.Persistence;
 using BookApp.Services.Api.Books;
+using BookApp.Services.BackgroundServices;
 using BookApp.Services.Books;
 using BookApp.Services.Checkout;
 using BookApp.Services.Order;
@@ -19,6 +20,8 @@ builder.Services.AddScoped<DisplayOrdersService>();
 builder.Services.AddScoped<IChangePubDateService, ChangePubDateService>();
 builder.Services.AddScoped<IChangePriceOfferService, ChangePriceOfferService>();
 builder.Services.AddScoped<IReviewService, ReviewService>();
+
+builder.Services.AddHostedService<BackgroundServiceCountReviews>();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
