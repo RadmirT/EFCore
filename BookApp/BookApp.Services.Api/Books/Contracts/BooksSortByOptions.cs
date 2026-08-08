@@ -17,5 +17,5 @@ public enum BooksSortByOptions
     ByPriceLowestFirst,
 
     [Display(Name = "Price ↑")]
-    ByPriceHigestFirst
+    ByPriceHighestFirst
 }

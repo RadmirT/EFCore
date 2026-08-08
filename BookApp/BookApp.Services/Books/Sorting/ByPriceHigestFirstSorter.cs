@@ -4,7 +4,7 @@ using System.Linq;
 using BookApp.Services.Api.Books;
 using BookApp.Services.Api.Books.Contracts;
 
-internal class ByPriceHigestFirstSorter() : BaseSorter(BooksSortByOptions.ByPriceHigestFirst)
+internal class ByPriceHighestFirstSorter() : BaseSorter(BooksSortByOptions.ByPriceHighestFirst)
 {
     public override IQueryable<BookListItem> Apply(IQueryable<BookListItem> books)
         => books.OrderByDescending(b => b.Price);
